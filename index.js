@@ -131,20 +131,21 @@ function stringifyParams(params)
   return newParams;
 }
 
+function init()
+{
+  require('dotenv').config();
+}
+
 module.exports = {
+  init            : init,
   ok              : ok,
   noop            : noop,
-
   async           : async,
   asyncObject     : asyncObject,
   getObjectFn     : getObjectFn,
-
   compareArray    : compareArray,
-
   getUniqueId     : getUniqueId,
-
   finallyCall     : finallyCall,
-
   ellipsis        : ellipsis,
   stringifyParams : stringifyParams
 }

@@ -1,10 +1,10 @@
 {
   "name": "n-commons",
-  "version": "1.0.0",
-  "description": "Node Utilities",
+  "version": "1.1.0",
+  "description": "Node Commons utilities",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./test/**/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,8 @@
   "homepage": "https://github.com/l1nknyto/n-commons#readme",
   "dependencies": {
     "biguint-format": "^1.0.0",
+    "bunyan": "^1.8.12",
+    "dotenv": "^6.0.0",
     "flake-idgen": "^1.1.0",
     "sliced": "^1.0.1"
   }
