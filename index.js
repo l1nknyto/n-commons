@@ -1,6 +1,6 @@
 const Intformat = require('biguint-format');
 const FlakeId   = require('flake-idgen');
-const Sliced    = require('Sliced');
+const Sliced    = require('sliced');
 
 const FlakeIdGen = new FlakeId();
 

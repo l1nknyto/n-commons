@@ -23,8 +23,10 @@
   "dependencies": {
     "biguint-format": "^1.0.0",
     "bunyan": "^1.8.12",
+    "cluster": "^0.7.7",
     "dotenv": "^6.0.0",
     "flake-idgen": "^1.1.0",
+    "memored": "^1.1.1",
     "sliced": "^1.0.1"
   }
 }
