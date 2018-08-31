@@ -54,6 +54,7 @@ const LoggerActivities = bunyan.createLogger({
 module.exports = {
   info             : info,
   error            : error,
+  debug            : debug,
   isDebug          : isDebug,
   activitiesLogger : LoggerActivities
 }
