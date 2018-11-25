@@ -4,7 +4,6 @@ var Logger   = require('./logger');
 const SESSION_PREFIX = (process.env.REDIS_SESSION_PREFIX) ? process.env.REDIS_SESSION_PREFIX : 'sess:';
 const TTL = (process.env.REDIS_LOCK_TTL) ? process.env.REDIS_LOCK_TTL : 5000;
 
-
 var redisClient = require('redis').createClient();
 redisClient.on('error', function(err) {
   Logger.error(err);

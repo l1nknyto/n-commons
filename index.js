@@ -52,21 +52,51 @@ function asyncObject(obj, method)
   }
 }
 
-function compareArray(array, array2, strict)
+function compare(value1, value2)
 {
-  if (!array && !array2) return false;
-  if (!array || !array2) return false;
-  if (array2.length != array.length) return false;
-
-  if (!strict) return compareArray(array.sort(), array2.sort(), true);
-  else for (var i = array2.length - 1; i >= 0; i--) {
-    if (array2[i] instanceof Array && array[i] instanceof Array) {
-      if (!compareArray(array[i], array2[i], strict)) return false;
-    } else if (array2[i] != array[i]) {
-      return false;
-    }
+  if (Array.isArray(value1)) {
+    return compareArray(value1, value2);
+  } else if (typeof value1 === 'object') {
+    return compareObject(value1, value2);
+  } else {
+    return (value1 == value2);
   }
-  return true;
+}
+
+function compareObject(obj1, obj2)
+{
+  if (obj1 != null && obj1 != null) {
+    var keys = Object.keys(obj1);
+    if (keys.length != Object.keys(obj2).length) return false;
+    for (var i = 0; i < keys.length; i++) {
+      var key = keys[i];
+      if (!compare(obj1[key], obj2[key])) {
+        return false;
+      }
+    }
+    return true;
+  } else {
+    return (obj1 == obj2);
+  }
+}
+
+function compareArray(arr1, arr2, strict = false)
+{
+  if (Array.isArray(arr1) && Array.isArray(arr2)) {
+    if (arr1.length != arr2.length) return false;
+    if (strict) {
+      for (var i = 0; i < arr1.length; i++) {
+        if (!compare(arr1[i], arr2[i])) {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return compareArray(arr1.sort(), arr2.sort(), true);
+    }
+  } else {
+    return (arr1 == arr2);
+  }
 }
 
 function getUniqueId()
@@ -143,6 +173,8 @@ module.exports = {
   async           : async,
   asyncObject     : asyncObject,
   getObjectFn     : getObjectFn,
+  compare         : compare,
+  compareObject   : compareObject,
   compareArray    : compareArray,
   getUniqueId     : getUniqueId,
   finallyCall     : finallyCall,
