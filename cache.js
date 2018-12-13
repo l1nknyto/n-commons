@@ -25,11 +25,22 @@ function get(key, callback)
 
 function set()
 {
-  var key      = arguments[0];
-  var value    = arguments[1];
-  var timeout  = (arguments.length > 3) ? arguments[2] : TIMEOUT;
-  var callback = (arguments.length > 3) ? arguments[3] : arguments[2];
+  var key   = arguments[0];
+  var value = arguments[1];
+  var timeout, callback;
+  if (arguments.length > 3) {
+    timeout  = (arguments[2]) ? arguments[2] : TIMEOUT;
+    callback = arguments[3];
+  } else {
+    timeout  = TIMEOUT;
+    callback = arguments[2];
+  }
   Memored.store(key, value, timeout, callback);
+}
+
+function setForever(key, value, callback)
+{
+  Memored.store(key, value, callback);
 }
 
 function del(key, callback)
@@ -38,8 +49,9 @@ function del(key, callback)
 }
 
 module.exports = {
-  init : init,
-  get  : get,
-  set  : set,
-  del  : del
+  init       : init,
+  get        : get,
+  set        : set,
+  setForever : setForever,
+  del        : del
 }

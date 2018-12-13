@@ -57,10 +57,9 @@ function redLock(resource, ttl, callback)
 }
 
 module.exports = {
+  end               : end,
   redisCache        : redisClient,
   redisSession      : redisClient,
-  redisCart         : redisClient,
-  end               : end,
   redLock           : redLock,
   getSession        : getSession,
   delSession        : delSession,
