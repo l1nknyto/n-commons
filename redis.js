@@ -3,6 +3,7 @@ var Logger   = require('./logger');
 
 const SESSION_PREFIX = (process.env.REDIS_SESSION_PREFIX) ? process.env.REDIS_SESSION_PREFIX : 'sess:';
 const TTL = (process.env.REDIS_LOCK_TTL) ? process.env.REDIS_LOCK_TTL : 5000;
+const DEFAULT_REDLOCK_OPTIONS = { driftFactor: 0.01, retryCount: 5, retryDelay: 200 };
 
 var redisClient = require('redis').createClient();
 redisClient.on('error', function(err) {
@@ -10,10 +11,8 @@ redisClient.on('error', function(err) {
 });
 
 var Redlock = require('redlock');
-var redlock = new Redlock([redisClient], { driftFactor: 0.01, retryCount: 5, retryDelay: 200 });
-redlock.on('clientError', function(err) {
-  Logger.error(err);
-});
+var redlock = new Redlock([redisClient], DEFAULT_REDLOCK_OPTIONS);
+redlock.on('clientError', function(err) { Logger.error(err); });
 
 function end()
 {
@@ -45,8 +44,13 @@ function updateUserSession(sessionId, keyValues, callback) {
 
 function redLock(resource, ttl, callback)
 {
-  var ttl_ = (ttl) ? ttl : TTL;
-  redlock.lock(resource, ttl_, NCommons.ok(callback, function(lock) {
+  doLock(redlock, resource, ttl, callback)
+}
+
+function doLock(redisLock, resource, ttl, callback)
+{
+  var newTtl = (ttl) ? ttl : TTL;
+  redisLock.lock(resource, newTtl, NCommons.ok(callback, function(lock) {
     var done = function() {
       lock.unlock(function(err) {
         if (err) Logger.error(err);
@@ -56,11 +60,24 @@ function redLock(resource, ttl, callback)
   }));
 }
 
+function redLockCustom(resource, options, callback)
+{
+  var newOptions = (options) ? options : {};
+  var lock = new Redlock([redisClient], {
+    driftFactor : (newOptions.driftFactor) ? newOptions.driftFactor : DEFAULT_REDLOCK_OPTIONS.driftFactor,
+    retryCount  : (newOptions.retryCount)  ? newOptions.retryCount  : DEFAULT_REDLOCK_OPTIONS.retryCount,
+    retryDelay  : (newOptions.retryDelay)  ? newOptions.retryDelay  : DEFAULT_REDLOCK_OPTIONS.retryDelay
+  });
+  lock.on('clientError', function(err) { Logger.error(err); });
+  doLock(lock, resource, newOptions.ttl, callback)
+}
+
 module.exports = {
   end               : end,
   redisCache        : redisClient,
   redisSession      : redisClient,
   redLock           : redLock,
+  redLockCustom     : redLockCustom,
   getSession        : getSession,
   delSession        : delSession,
   updateUserSession : updateUserSession
