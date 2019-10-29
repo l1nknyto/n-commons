@@ -1,6 +1,8 @@
 const Memored = require('memored');
 const NodeCache = require("node-cache");
 
+const TIMEOUT = (process.env.CACHE_TIMEOUT) ? process.env.CACHE_TIMEOUT : (5 * 60 * 1000);
+
 class ClusterCache {
 
   init(beforePurgeFn = null) {
