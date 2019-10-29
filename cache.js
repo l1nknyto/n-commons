@@ -75,10 +75,10 @@ class StandaloneCache {
   }
 }
 
-var instance = null;
+var instance = new ClusterCache();
 
 function init(beforePurgeFn = null, isStandalone = false) {
-  instance = (isStandalone) ? new StandaloneCache() : new ClusterCache();
+  if (isStandalone) instance = new StandaloneCache();
   instance.init(beforePurgeFn);
 }
 
