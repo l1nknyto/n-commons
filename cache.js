@@ -1,3 +1,4 @@
+const Memored = require('memored');
 const NodeCache = require("node-cache");
 
 class ClusterCache {
